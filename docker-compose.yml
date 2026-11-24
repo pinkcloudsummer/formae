@@ -1,0 +1,14 @@
+services:
+  formae:
+    image: ghcr.io/pinkcloudsummer/formae:latest
+    container_name: formae
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    environment:
+      - FORMAE_DB_PATH=/data/formae.db
+      # Set a strong secret token and enter the same token in FORMAE -> SYSTEM -> NAS Backend
+      - FORMAE_API_TOKEN=change-me-to-a-strong-token
+      - FORMAE_CORS_ORIGINS=*
+    volumes:
+      - ./data:/data

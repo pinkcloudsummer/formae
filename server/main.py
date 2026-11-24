@@ -8,9 +8,12 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 DB_PATH = Path(os.getenv("FORMAE_DB_PATH", "./data/formae.db"))
+STATIC_DIR = Path(os.getenv("FORMAE_STATIC_DIR", "/app/static"))
 API_TOKEN = os.getenv("FORMAE_API_TOKEN", "").strip()
 CORS_ORIGINS = [
     origin.strip()
@@ -180,3 +183,24 @@ def sync_pull(
         "sessions": [json.loads(r["payload"]) for r in s_rows],
         "exercises": [json.loads(r["payload"]) for r in e_rows],
     }
+
+
+# Serve the built React PWA when bundled into the container
+if STATIC_DIR.is_dir():
+    assets_dir = STATIC_DIR / "assets"
+    if assets_dir.is_dir():
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    def serve_spa(full_path: str):
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Not found")
+        candidate = (STATIC_DIR / full_path).resolve()
+        if (
+            full_path
+            and candidate.is_file()
+            and str(candidate).startswith(str(STATIC_DIR.resolve()))
+        ):
+            return FileResponse(candidate)
+        return FileResponse(STATIC_DIR / "index.html")
+
