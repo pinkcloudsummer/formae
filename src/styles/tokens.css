@@ -1,0 +1,40 @@
+:root {
+  /* Starfield NASA-Punk Light Matte Hardware Surfaces */
+  --bg-terminal: #ebe7de;
+  --bg-surface: #f7f5f0;
+  --bg-surface-elevated: #ffffff;
+  --bg-input: #efece5;
+
+  /* Aerospace Navy-Charcoal & Warm Titanium Ink */
+  --ink-primary: #1a2433;
+  --ink-bright: #101824;
+  --ink-secondary: #4a5568;
+  --ink-muted: #707b8c;
+  --ink-inverse: #faf8f4;
+
+  /* Structural Dividers */
+  --border-subtle: #dcd6ca;
+  --border-strong: #beb6a7;
+  --border-bone: #c9c1b3;
+
+  /* Constellation Rainbow Ribbon Palette */
+  --const-crimson: #c83e2b;
+  --const-orange: #e0712a;
+  --const-gold: #d99b1e;
+  --const-slate: #2b5f82;
+
+  /* Telemetry Status LEDs (high contrast on light ceramic) */
+  --led-green: #16a34a;
+  --led-amber: #d97706;
+  --led-red: #dc2626;
+  --led-blue: #2563eb;
+
+  /* Clean Legible Sans-Serif Typography (no monospace) */
+  --font-display: 'Barlow', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Radii — clean industrial chamfers */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+}

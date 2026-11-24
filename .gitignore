@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Local NAS / Python runtime artifacts
+server/data/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment & secrets
+.env
+.env.local
+
+# OS & editor
+.DS_Store
