@@ -8,6 +8,8 @@ RUN npm ci
 COPY index.html tsconfig.json tsconfig.node.json vite.config.ts ./
 COPY public ./public
 COPY src ./src
+ARG VITE_XTDS_URL=""
+ENV VITE_XTDS_URL=${VITE_XTDS_URL}
 RUN npm run build
 
 # Stage 2: FastAPI NAS Sync Server + Built PWA

@@ -50,7 +50,15 @@ export const TopTelemetryBar: React.FC<TopTelemetryBarProps> = ({
       <ConstellationSwoosh variant="header" />
 
       <div className="top-bar-inner">
-        <div className="brand-block">
+        <div
+          className="brand-block"
+          data-field-monitor-trigger
+          style={{
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            WebkitTouchCallout: 'none',
+          }}
+        >
           <div>
             <h1 className="brand-title">FORMAE</h1>
             <div className="brand-sub">SYS // FIELD TELEMETRY</div>

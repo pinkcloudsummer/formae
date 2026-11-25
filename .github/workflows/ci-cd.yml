@@ -82,5 +82,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VITE_XTDS_URL=${{ secrets.VITE_XTDS_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

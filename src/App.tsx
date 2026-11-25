@@ -7,6 +7,7 @@ import { SettingsView } from './components/SettingsView';
 import { StandbyView } from './components/StandbyView';
 import { NavTab, TopTelemetryBar } from './components/TopTelemetryBar';
 import { ConstellationSwoosh } from './components/ConstellationSwoosh';
+import { FieldMonitorBridge } from './components/FieldMonitorBridge';
 import { BUILTIN_EXERCISES } from './data/exerciseCatalog';
 import {
   DEFAULT_SETTINGS,
@@ -778,6 +779,8 @@ export const App: React.FC = () => {
       <footer className="terminal-footer">
         <span>FORMAE // v1.0 LOCAL-FIRST</span>
         <span>STORAGE: INDEXEDDB &rarr; NAS SYNC</span>
+
+      <FieldMonitorBridge view={activeTab} />
       </footer>
     </div>
   );
