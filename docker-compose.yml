@@ -7,8 +7,8 @@ services:
       - "8787:8787"
     environment:
       - FORMAE_DB_PATH=/data/formae.db
-      # Loaded automatically from .env in the same folder (not committed to git)
-      - FORMAE_API_TOKEN=${FORMAE_API_TOKEN:?Set FORMAE_API_TOKEN in .env}
+      # Optional: leave blank when serving privately over Tailscale for zero-config auto-sync
+      - FORMAE_API_TOKEN=${FORMAE_API_TOKEN:-}
       - FORMAE_CORS_ORIGINS=${FORMAE_CORS_ORIGINS:-*}
     volumes:
       - ./data:/data
