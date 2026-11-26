@@ -12,3 +12,21 @@ services:
       - FORMAE_CORS_ORIGINS=${FORMAE_CORS_ORIGINS:-*}
     volumes:
       - ./data:/data
+
+  # GitHub Actions self-hosted runner — runs on the NAS, builds images and deploys immediately.
+  # Start with: sudo docker compose --profile cicd up -d
+  github-runner:
+    profiles: [cicd]
+    image: myoung34/github-runner:latest
+    container_name: formae_github_runner
+    environment:
+      REPO_URL: https://github.com/pinkcloudsummer/formae
+      ACCESS_TOKEN: ${GITHUB_RUNNER_TOKEN}
+      RUNNER_NAME: nas-runner-formae
+      LABELS: self-hosted,nas
+      RUNNER_WORKDIR: /tmp/runner/work
+      RUNNER_ALLOW_REPLACE: "true"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /volume2/docker/formae:/volume2/docker/formae:ro
+    restart: unless-stopped
