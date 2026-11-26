@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { probeNasHealth } from '../services/syncEngine';
+import { probeNasHealth, resolveNasUrl } from '../services/syncEngine';
 import { AppSettings, SyncStateSnapshot, WeightUnit } from '../types/workout';
 
 interface SettingsViewProps {
@@ -141,13 +141,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         <div className="stack-md">
           <div className="field-group">
             <label htmlFor="nas-url" className="field-label">
-              NAS API BASE URL (LAN IP, LOCAL DOMAIN, OR TAILSCALE URL)
+              NAS API BASE URL (LEAVE BLANK TO AUTO-SYNC WITH THIS SERVER)
             </label>
             <input
               id="nas-url"
               type="url"
               className="terminal-input mono"
-              placeholder="http://192.168.1.50:8787"
+              placeholder={resolveNasUrl('') || 'http://192.168.1.50:8787'}
               value={nasUrl}
               onChange={(e) => setNasUrl(e.target.value)}
             />
@@ -201,7 +201,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             <button
               type="button"
               className="btn btn--ghost"
-              disabled={testing || !nasUrl.trim()}
+              disabled={testing || !resolveNasUrl(nasUrl)}
               onClick={handleTestConnection}
             >
               {testing ? 'PROBING...' : 'TEST NAS LINK'}
@@ -209,7 +209,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             <button
               type="button"
               className="btn btn--orange"
-              disabled={!nasUrl.trim()}
+              disabled={!resolveNasUrl(nasUrl)}
               onClick={handleSaveAndSync}
             >
               SYNC NOW

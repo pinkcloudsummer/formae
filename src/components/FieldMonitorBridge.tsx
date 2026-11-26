@@ -1,14 +1,22 @@
 import React, { useEffect } from 'react';
 
-const DEFAULT_XTDS_URL = 'http://localhost:3003';
 const SCRIPT_ID = 'xtds-field-monitor-script';
+
+function resolveXtdsBaseUrl(): string {
+  const configured = (import.meta.env.VITE_XTDS_URL || '').trim();
+  if (configured) return configured.replace(/\/+$/, '');
+  if (typeof window !== 'undefined' && window.location?.hostname) {
+    return `${window.location.protocol}//${window.location.hostname}:3003`;
+  }
+  return 'http://localhost:3003';
+}
 
 interface FieldMonitorBridgeProps {
   view?: string;
 }
 
 export const FieldMonitorBridge: React.FC<FieldMonitorBridgeProps> = ({ view }) => {
-  const baseUrl = (import.meta.env.VITE_XTDS_URL || DEFAULT_XTDS_URL).replace(/\/+$/, '');
+  const baseUrl = resolveXtdsBaseUrl();
   const scriptSrc = `${baseUrl}/widget/field-monitor.js`;
   const endpoint = `${baseUrl}/api/field-monitor`;
 

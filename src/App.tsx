@@ -24,7 +24,7 @@ import {
   saveSettings,
   softDeleteSession,
 } from './db/database';
-import { runNasSync } from './services/syncEngine';
+import { resolveNasUrl, runNasSync } from './services/syncEngine';
 import {
   AppSettings,
   Exercise,
@@ -97,12 +97,13 @@ export const App: React.FC = () => {
     setCustomExercises(loadedCustom);
     setActiveSession(loadedActive);
 
+    const effectiveNasUrl = resolveNasUrl(loadedSettings.nasUrl);
     setSyncState((prev) => ({
       ...prev,
       pendingCount: pending,
       lastSyncAt: loadedSettings.lastSyncAt,
-      state: loadedSettings.nasUrl.trim() ? prev.state : 'unconfigured',
-      message: loadedSettings.nasUrl.trim() ? prev.message : 'LOCAL ONLY',
+      state: effectiveNasUrl ? prev.state : 'unconfigured',
+      message: effectiveNasUrl ? prev.message : 'LOCAL ONLY',
     }));
 
     return { loadedSettings, loadedActive };
@@ -111,7 +112,7 @@ export const App: React.FC = () => {
   const triggerSync = useCallback(
     async (overrideSettings?: AppSettings) => {
       const targetSettings = overrideSettings ?? (await loadSettings());
-      if (!targetSettings.nasUrl.trim()) {
+      if (!resolveNasUrl(targetSettings.nasUrl)) {
         const pending = await getPendingCount();
         setSyncState({
           state: 'unconfigured',
@@ -166,7 +167,7 @@ export const App: React.FC = () => {
         }
       }
       setHydrated(true);
-      if (loadedSettings.nasUrl.trim()) {
+      if (resolveNasUrl(loadedSettings.nasUrl)) {
         void triggerSync(loadedSettings);
       }
     })();
@@ -571,11 +572,12 @@ export const App: React.FC = () => {
     setSettings(next);
     await saveSettings(next);
     const pending = await getPendingCount();
+    const effectiveNasUrl = resolveNasUrl(next.nasUrl);
     setSyncState((prev) => ({
       ...prev,
       pendingCount: pending,
-      state: next.nasUrl.trim() ? prev.state : 'unconfigured',
-      message: next.nasUrl.trim() ? prev.message : 'LOCAL ONLY',
+      state: effectiveNasUrl ? prev.state : 'unconfigured',
+      message: effectiveNasUrl ? prev.message : 'LOCAL ONLY',
     }));
   };
 

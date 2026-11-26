@@ -18,6 +18,25 @@ function normalizeBaseUrl(url: string): string {
   return url.trim().replace(/\/+$/, '');
 }
 
+/**
+ * Resolve the effective NAS API base URL:
+ * - Uses the explicitly configured `nasUrl` if set.
+ * - Otherwise defaults to the origin serving this app (`window.location.origin`),
+ *   so the app automatically syncs with its own NAS host when reachable.
+ */
+export function resolveNasUrl(nasUrl?: string): string {
+  const explicit = normalizeBaseUrl(nasUrl ?? '');
+  if (explicit) return explicit;
+  if (
+    typeof window !== 'undefined' &&
+    window.location?.origin &&
+    /^https?:\/\//i.test(window.location.origin)
+  ) {
+    return normalizeBaseUrl(window.location.origin);
+  }
+  return '';
+}
+
 function buildHeaders(apiToken: string): HeadersInit {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -43,7 +62,7 @@ async function fetchWithTimeout(
 }
 
 export async function probeNasHealth(nasUrl: string, apiToken: string): Promise<{ ok: boolean; detail: string }> {
-  const base = normalizeBaseUrl(nasUrl);
+  const base = resolveNasUrl(nasUrl);
   if (!base) {
     return { ok: false, detail: 'NAS endpoint not configured' };
   }
@@ -73,7 +92,7 @@ export async function runNasSync(
 ): Promise<{ snapshot: SyncStateSnapshot; pulledChanges: boolean }> {
   const settings = overrideSettings ?? (await loadSettings());
   const pendingBefore = await getPendingCount();
-  const base = normalizeBaseUrl(settings.nasUrl);
+  const base = resolveNasUrl(settings.nasUrl);
 
   if (!base) {
     return {
