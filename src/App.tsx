@@ -779,9 +779,9 @@ export const App: React.FC = () => {
       <footer className="terminal-footer">
         <span>FORMAE // v1.0 LOCAL-FIRST</span>
         <span>STORAGE: INDEXEDDB &rarr; NAS SYNC</span>
+      </footer>
 
       <FieldMonitorBridge view={activeTab} />
-      </footer>
     </div>
   );
 };
